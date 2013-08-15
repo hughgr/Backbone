@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     lessSource: 'assets/less',
     lessDest: 'assets/css',
     jsSource: 'assets/jsSRC',
-    jsDest: 'assets/js'
+    jsDest: 'assets/js',
     less: {
         dev: {
             files: [
@@ -63,11 +63,11 @@ module.exports = function(grunt) {
                     ],
             tasks : ['less:dev']
         },
-        html {
-             option: {
-                livereload : true
+        html: {
+             options: {
+                livereload : true,
                 },
-             file : ['**/*.html'],
+             files : ['**/*.html']
              
             }
     }
