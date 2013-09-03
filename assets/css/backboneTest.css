@@ -1,3 +1,21 @@
 body {
   background-color: #fff;
 }
+div {
+  width: 1000px;
+  height: 100px;
+  background-color: #000;
+}
+div:nth-child(odd) {
+  background-color: #ccc;
+}
+#test {
+  width: 1000px;
+  height: 100px;
+  background-color: #ff0;
+}
+.fixPosition {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
