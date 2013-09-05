@@ -1,0 +1,26 @@
+
+
+[
+
+{
+            "name": "DIV4",
+            "id": "21ffdd2",
+            "status": [
+                {"health": "ok"},
+                {"health": "bad"},
+                {"health": "soso"}
+            ],
+            "homeWork": "math"
+},
+{
+            "name": "DIV3",
+            "id": "2122if3df",
+            "status": [
+                {"health": "ok"},
+                {"health": "bad"},
+                {"health": "soso"}
+            ],
+            "homeWork": "history"
+}
+
+]

@@ -1,0 +1,118 @@
+
+var Person = Backbone.Model.extend({
+        defaults: function(){
+            return {
+            name: 'emptyDIV',
+            order: personList.nextOrder(),
+            id: '323',
+            status: [
+                {health: 'ok'},
+                {health: 'bad'},
+                {health: 'soso'}
+            ],
+            homeWork: 'emptyHomeWork'
+        };
+            
+        },
+        initialize: function(){
+            console.log('Person has been initiallized')
+        }
+
+    });
+var PersonList = Backbone.Collection.extend({
+      model : Person,
+      nextOrder : function(){
+        if (!this.length) return 1;
+        return this.last().get('order') + 1;
+    },
+    initialize: function(){
+        this.on('add',function(){
+            console.log('add another obj')
+        });
+    }
+});
+var personList = new PersonList();
+
+
+var GroupView = Backbone.View.extend({
+
+        tagName: 'div',
+        TPL: _.template($('#group-template').html()),
+        events: {
+            'click .remove': 'clear'
+        },
+        initialize: function(){
+            this.listenTo(this.model,'destory',this.remove);
+            this.listenTo(this.model,'change',this.render);
+        },
+        render: function(){
+            this.$el.html(this.TPL(this.model.toJSON()));
+            return this;
+        },
+        clear: function(){
+            this.model.remove;
+            this.remove();
+            console.log(JSON.stringify(personList))
+        }
+        
+         
+});
+
+
+var ContainerView = Backbone.View.extend({
+    el: $('#J_container'),
+    events: {
+        'click #J_add' : 'doAdd',
+        'click .remove' : 'doRemove'
+    },
+    addOne: function(person){
+            
+        var groupView = new GroupView({model:person});
+        this.groupContent.append(groupView.render().el)
+    },
+    reset: function(){
+
+        
+    },
+     initialize: function(){
+         this.listenTo(personList,'add',this.addOne);
+         this.listenTo(personList,'all',this.render)
+         this.groupContent = $('#groupContent');
+         
+    },
+    doAdd: function(){
+        var person = new Person();
+        personList.add(person);
+        //this.fetchData();
+    },
+    render: function(){
+        //this.groupContent.hide();
+    },
+    fetchData: function(){
+        
+                    $.ajax({
+                        url: 'newData.json',
+                        dataType: 'json',
+                        traditional: true,
+                        type: 'get',
+                        success: function(data){
+                            alert('success');
+                            $.each(data,function(i){
+                                    personList.add(data[i])
+                            })
+                            /*console.log(JSON.stringify(data))
+                            var tmp = JSON.stringify(data);
+                            tmp.data.each(function(item){
+                                    console.log(item)
+                                   personList.add(item)
+                            
+                            })*/
+                            return true;
+                        },
+                        error: function(){alert('error')}
+                    })
+    }
+    });
+    
+var containerView = new ContainerView();
+
