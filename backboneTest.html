@@ -15,7 +15,8 @@
       
      <script type="text/template" id="group-template">
        <a><%=name%></a>
-       <a><%=homeWork%></a>
+       <a class="J_homework"><%=homeWork%></a>
+       <a><%=date%></a>
          <div class="J_content"> 
              <%for(var i = 0; i<status.length; i++) {%>
                 <div class="child"><%=status[i].health%><button class="remove">removeMe</button><button class="modify">modify to homework toPP</button></div>

@@ -4,7 +4,8 @@
 
 {
             "name": "DIV4",
-            "id": "21ffdd2",
+            "id": "21fx",
+            "date": "2013-1-1 22:32",
             "status": [
                 {"health": "ok"},
                 {"health": "bad"},
@@ -14,7 +15,8 @@
 },
 {
             "name": "DIV3",
-            "id": "2122if3df",
+            "id": "2122xxxf",
+            "date": "2013-2-1 12:21",
             "status": [
                 {"health": "ok"},
                 {"health": "bad"},

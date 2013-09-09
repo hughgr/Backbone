@@ -84,12 +84,20 @@ var saveData = function(model,callBack){
 
 var modifyData = function(model,callBack){
     $.ajax({
+            url: 'modifyData.json',
             type: 'post',
             data: model,
             success: callBack
         })
 
 };
+/*Backbone.sync = function(method , model){
+    alert(method + ':' + model.url);
+    personList.add(model)
+}*/
+
+$(function(){
+
 var Person = Backbone.Model.extend({
         defaults: function(){
             return {
@@ -99,6 +107,7 @@ var Person = Backbone.Model.extend({
                 {health: 'bad'},
                 {health: 'soso'}
             ],
+            date:'2012-01-06',
             homeWork: 'emptyHomeWork'
         };
             
@@ -111,13 +120,17 @@ var Person = Backbone.Model.extend({
     });
 var PersonList = Backbone.Collection.extend({
       model : Person,
+      url: 'newData.json',
       nextOrder : function(){
         if (!this.length) return 1;
         return this.last().get('order') + 1;
     },
+    comparator: function(person){
+        return - new Date(person.get('date')).getTime();
+    },
     initialize: function(){
         this.on('add',function(){
-            console.log('add another obj')
+                console.log('add another obj');
         });
     },
 
@@ -134,17 +147,28 @@ var GroupView = Backbone.View.extend({
             'click .modify': 'modify'
         },
         initialize: function(){
-            this.listenTo(this.model,'destory',function(){this.remove();personList.remove(this.model)});
-            //this.listenTo(this.model,'destory',this.remove);
-            this.listenTo(this.model,'change',this.render);
+           this.listenTo(this.model,'destory',function(){this.remove();personList.remove(this.model)});
+           this.listenTo(this.model,'change',this.render);
         },
         render: function(){
             this.$el.html(this.TPL(this.model.toJSON()));
+            this.homework = this.$('.J_homework');
+            console.log(this.homework.text());
             return this;
         },
         modify: function(){
-            var tmpVal = this.model.get('homeWork');
-            this.model.set('homeWork','ppp');
+            
+            var self = this;
+            var pkg = {
+                'id': this.model.get('id'),
+                'homeWork':'pp'
+            }
+            console.log(pkg)
+            modifyData(pkg,function(data){
+                if(data.status == 'success'){
+                    self.model.set('homeWork',pkg.homeWork)
+                }
+            });
         },
         clear: function(){
             /*this.model.destroy();*/
@@ -164,7 +188,6 @@ var ContainerView = Backbone.View.extend({
         'click .remove' : 'doRemove'
     },
     addOne: function(person){
-            
         var groupView = new GroupView({model:person});
         this.groupContent.append(groupView.render().el)
     },
@@ -173,29 +196,38 @@ var ContainerView = Backbone.View.extend({
         
     },
      initialize: function(){
-         this.listenTo(personList,'add',this.addOne);
-         this.listenTo(personList,'all',this.render)
+         //this.listenTo(personList,'add',this.addOne);
+         this.listenTo(personList,'all',this.render);
          this.groupContent = $('#groupContent');
          
     },
     doAdd: function(){
         fetchData(this.callBack)
+        //personList.fetch();
     },
 
     callBack: function(data){
         $.each(data,function(i){
                 personList.add(data[i])
             })
+        console.log(JSON.stringify(personList))
         return true;
     },
     render: function(){
-        //this.groupContent.hide();
+        this.groupContent.html('');
+        var self = this;
+        _.each(personList.models,function(person){
+        var groupView = new GroupView({model:person});
+        self.groupContent.append(groupView.render().el)
+            
+        })
     }
     });
     
 var containerView = new ContainerView();
 
 
+})
 /*
 var ContentView = Backbone.View.extend({
     initialize: function(){
